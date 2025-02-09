@@ -37,17 +37,30 @@ function findAndClickSubmitButton() {
 
 // Listen for keydown events
 document.addEventListener('keydown', function(event) {
-  // Check if it's Command+Enter (Mac) or Control+Enter (Windows/Linux)
-  if (event.key === 'Enter' && (event.metaKey || event.ctrlKey)) {
-    // Prevent the default behavior immediately
-    event.preventDefault();
-    event.stopPropagation();
+  // Only proceed if it's exactly Command+Enter (Mac) or Control+Enter (Windows/Linux)
+  // and no other modifier keys are pressed (like shift)
+  if (event.key === 'Enter' && 
+      (event.metaKey || event.ctrlKey) && 
+      !event.shiftKey && 
+      !event.altKey) {
     
-    // Try to find and click the submit button
-    const submitted = findAndClickSubmitButton();
+    // Only prevent default if we're in a text input or contenteditable element
+    const activeElement = document.activeElement;
+    const isTextInput = activeElement.tagName === 'TEXTAREA' || 
+                       activeElement.tagName === 'INPUT' ||
+                       activeElement.getAttribute('contenteditable') === 'true' ||
+                       activeElement.getAttribute('role') === 'textbox';
     
-    if (!submitted) {
-      console.log('No submit button found - make sure you are focused in a comment or post input field');
+    if (isTextInput) {
+      event.preventDefault();
+      event.stopPropagation();
+      
+      // Try to find and click the submit button
+      const submitted = findAndClickSubmitButton();
+      
+      if (!submitted) {
+        console.log('No submit button found - make sure you are focused in a comment or post input field');
+      }
     }
   }
 }); 
