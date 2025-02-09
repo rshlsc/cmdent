@@ -8,6 +8,12 @@
     "48": "icon48.png",
     "128": "icon128.png"
   },
+  "permissions": [
+    "activeTab"
+  ],
+  "host_permissions": [
+    "*://*.reddit.com/*"
+  ],
   "content_scripts": [
     {
       "matches": ["*://*.reddit.com/*"],
